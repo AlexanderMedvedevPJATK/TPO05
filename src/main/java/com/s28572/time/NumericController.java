@@ -16,28 +16,32 @@ public class NumericController {
     }
 
     @PostMapping("/convert")
-    public String convert(@RequestParam int value,
+    @ResponseBody
+    public String convert(@RequestParam(name = "value-to-convert") String value,
                           @RequestParam(name = "from-base") int fromBase,
                           @RequestParam(name = "to-base") int toBase) {
-        int decimal = convertToDecimal(String.valueOf(value), fromBase);
-        String res = convertToBase(decimal, toBase);
-        System.out.println("INIT VALUE: " + value);
-        System.out.println("DEC: " + decimal);
-        System.out.println("BIN: " + Integer.toBinaryString(decimal));
-        System.out.println("OCT: " + Integer.toOctalString(decimal));
-        System.out.println("HEX: " + Integer.toHexString(decimal));
-        System.out.println("RES: " + res);
-
-
-        return "redirect:/converter";
+        try {
+            int decimal = convertToDecimal(value, fromBase);
+            String res = convertToBase(decimal, toBase);
+            return String.format("""
+                INIT VALUE: %s<br>
+                RES: %s<br>
+                BIN: %s<br>
+                OCT: %s<br>
+                DEC: %s<br>
+                HEX: %s<br>
+                """,
+                    value, res, Integer.toBinaryString(decimal),
+                    Integer.toOctalString(decimal), decimal, Integer.toHexString(decimal));
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
     }
 
     public static String convertToBase(int decimalNumber, int targetBase) {
         StringBuilder result = new StringBuilder();
         while (decimalNumber > 0) {
             int remainder = decimalNumber % targetBase;
-            System.out.println(decimalNumber + " " + remainder + " " + targetBase);
-            System.out.println(String.valueOf((char) ('a' + remainder - 10)));
             result.insert(0, remainder > 9 ? String.valueOf((char) ('a' + remainder - 10)) : remainder);
             decimalNumber /= targetBase;
         }
@@ -45,11 +49,27 @@ public class NumericController {
     }
 
     public static int convertToDecimal(String number, int sourceBase) {
+        if (number.startsWith("-")) {
+            throw new IllegalArgumentException("Input value cannot be negative");
+        }
         int decimalNumber = 0;
         int power = 0;
         for (int i = number.length() - 1; i >= 0; i -= 1) {
-            int digit = Character.getNumericValue(number.charAt(i));
+            char digitCh = number.charAt(i);
+            int digit;
+            if (digitCh >= '0' && digitCh <= '9') {
+                digit = Character.getNumericValue(digitCh);
+            } else {
+                digit = number.charAt(i) - 87;
+            }
+            if (digit >= sourceBase) {
+                System.out.println(digit);
+                System.out.println(sourceBase - 1);
+                throw new IllegalArgumentException("Number is not in specified base system");
+            }
+            System.out.println(digit);
             decimalNumber += (int) (digit * Math.pow(sourceBase, power));
+            System.out.println(decimalNumber + " " + (digit * Math.pow(sourceBase, power)));
             power++;
         }
         return decimalNumber;

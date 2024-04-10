@@ -46,6 +46,6 @@ public class TimeController {
     @GetMapping("/current-year")
     @ResponseBody
     public String getCurrentYear() {
-        return String.valueOf("It's " + LocalDate.now().getYear());
+        return "It's " + LocalDate.now().getYear();
     }
 }

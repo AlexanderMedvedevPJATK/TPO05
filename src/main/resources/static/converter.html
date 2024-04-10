@@ -6,19 +6,18 @@
 </head>
 <body>
 <form method="POST" action="/convert">
-    <label for="value">Value:</label><br>
-    <input type="number" id="value" name="value"><br><br>
+    <label for="value-to-convert">Value:</label><br>
+    <input type="text" id="value-to-convert" name="value-to-convert" style="width: 150px;"><br><br>
     <label for="from-base">From base (2-100):</label><br>
-    <input type="number" id="from-base" name="from-base" min="2" max="100" oninput="checkLimit(this)" style="width: 142px;"><br><br>
+    <input type="number" id="from-base" name="from-base" min="2" max="100" oninput="checkLimit(this)" style="width: 150px;"><br><br>
     <label for="to-base">To base (2-100):</label><br>
-    <input type="number" id="to-base" name="to-base" min="2" max="100" oninput="checkLimit(this)" style="width: 142px;"><br><br>
+    <input type="number" id="to-base" name="to-base" min="2" max="100" oninput="checkLimit(this)" style="width: 150px;"><br><br>
     <input type="submit" value="Submit">
 </form>
 <script>
     function checkLimit(input) {
         if (input.value === ""){
             input.value = null;
-            console.log(input.value);
         } else if (input.value > parseInt(input.max)) {
             input.value = input.max;
         }
