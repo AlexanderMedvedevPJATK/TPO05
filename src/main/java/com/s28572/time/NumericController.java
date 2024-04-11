@@ -24,12 +24,28 @@ public class NumericController {
             int decimal = convertToDecimal(value, fromBase);
             String res = convertToBase(decimal, toBase);
             return String.format("""
-                INIT VALUE: %s<br>
-                RES: %s<br>
-                BIN: %s<br>
-                OCT: %s<br>
-                DEC: %s<br>
-                HEX: %s<br>
+               <!DOCTYPE html>
+               <html lang="en">
+               <head>
+                 <meta charset="UTF-8">
+                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                 <title>Converter</title>
+                 <link rel="stylesheet" href="styles/style.css">
+               </head>
+               <body>
+                 <div class="container">
+                   <div class="styled-text">
+                     <p>INIT VALUE: <span>%s</span></p>
+                     <p>RESULT: <span>%s</span></p>
+                     <p>BIN: <span>%s</span></p>
+                     <p>OCT: <span>%s</span></p>
+                     <p>DEC: <span>%s</span></p>
+                     <p>HEX: <span>%s</span></p>
+                   </div>
+                 </div>
+               </body>
+               </html>
+                                       
                 """,
                     value, res, Integer.toBinaryString(decimal),
                     Integer.toOctalString(decimal), decimal, Integer.toHexString(decimal));
